@@ -1,0 +1,29 @@
+---
+- hosts: nodes
+  become: yes
+  vars:
+    ssh_keys_repo_raw_url: "https://raw.githubusercontent.com/MacGurk/ssh-pubkeys/master"
+  tasks:
+    - name: Create new user omorf
+      user:
+        name: omorf
+        shell: /bin/bash
+        group: sudo
+    - name: Set auth key from file
+      ansible.posix.authorized_key:
+        user: omorf
+        state: present
+        key: "{{ lookup('url', item, ) }}"
+      loop:
+        - "{{ ssh_keys_repo_raw_url }}/morpheus-winbook.pub"
+    - name: Set passwordless sudo
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+    - name: Disable root password
+      user:
+        name: root
+        password_lock: true

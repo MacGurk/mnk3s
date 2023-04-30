@@ -1,0 +1,7 @@
+---
+- hosts: nodes
+  tasks:
+    - name: Ensure chronyd is installed.
+      apt:
+        name: chronyd
+        state: present
