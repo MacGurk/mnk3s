@@ -16,6 +16,7 @@
         key: "{{ lookup('url', item, ) }}"
       loop:
         - "{{ ssh_keys_repo_raw_url }}/morpheus-winbook.pub"
+        - "{{ ssh_keys_repo_raw_url }}/morpheus_mk3_wsl.pub"
     - name: Set passwordless sudo
       lineinfile:
         path: /etc/sudoers
